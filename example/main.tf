@@ -1,13 +1,15 @@
-module "external_alb" {
+provider "aws" {
+  allowed_account_ids = ["${var.aws_account_id}"]
+  region              = "${var.aws_region}"
+  access_key          = "${var.aws_access_key}"
+  secret_key          = "${var.aws_secret_key}"
+  region              = "${var.aws_region}"
+}
+
+module "alb" {
   source              = "github.com/brandoconnor/tf_aws_alb"
-  alb_name            = "${var.alb_name}"
-  backend_port        = "${var.instance_port}"
-  backend_protocol    = "${var.instance_protocol}"
-  health_check_target = "${var.health_check_target}"
-  alb_security_groups = "${join(",", var.security_group_id_list)}"
-  log_bucket          = "${var.log_bucket_name}-${var.aws_region}"
-  log_prefix          = "${var.log_prefix}"
-  certificate_arn     = "${var.certificate_arn}"
-  subnets             = "${join(",", var.public_subnet_ids)}"
+  alb_security_groups = "${var.security_group_id_list}"
+  log_bucket          = "${var.log_bucket}"
+  subnets             = "${var.subnet_id_list}"
   vpc_id              = "${var.vpc_id}"
 }
