@@ -1,41 +1,37 @@
-variable "aws_region" {
-  default = "us-west-2"
+variable "aws_account_id" {
+  default = "123456789012"
 }
 
-variable "alb_name" {
-  default = "example_alb"
+variable "aws_access_key" {
+  default = "access_key_id_here"
+}
+
+variable "aws_secret_key" {
+  default = "secret_access_key_here"
+}
+
+variable "aws_region" {
+  default = "us-west-2"
 }
 
 variable "security_group_id_list" {
   default = ["sg-edcd9784", "sg-edcd9785"]
 }
 
-variable "certificate_arn" {
-  default = "arn:aws:iam::123456789012:server-certificate/ProdServerCert"
+variable "security_group_id_list" {
+  default = ["sg-edcd9784", "sg-edcd9785"]
 }
 
-variable "public_subnet_ids" {
+variable "security_group_id_list" {
+  default = ["sg-edcd9784", "sg-edcd9785"]
+}
+
+variable "subnet_id_list" {
   default = ["subnet-1a2b3c4d", "subnet-1a2b3c4e", "subnet-1a2b3c4f"]
-}
-
-variable "instance_port" {
-  default = "8080"
-}
-
-variable "instance_protocol" {
-  default = "HTTPS"
-}
-
-variable "health_check_target" {
-  default = "HTTPS:443/health"
 }
 
 variable "log_bucket_name" {
   default = "my_log_bucket"
-}
-
-variable "log_prefix" {
-  default = "example_alb"
 }
 
 variable "vpc_id" {

@@ -1,3 +1,6 @@
 *.tfvars*
 *.tfstate*
 .terraform
+**/Gemfile.lock
+**/inspec.lock
+*.gem

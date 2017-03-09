@@ -27,28 +27,38 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 
 ## Input Variables
 ---------------
-* `lc_name` - The launch configuration name
+* `alb_is_internal` - Determines if the ALB is externally facing or internal. (Optional; default: false)
+* `alb_name` - Name of the ALB as it appears in the AWS console. (Optional; default: my_alb)
+* `alb_protocols` - A comma delimited list of protocols the ALB will accept for incoming connections. Only HTTP and HTTPS are supported. (Optional; default: HTTPS)
+* `alb_security_groups` - A comma delimited list of security groups to attach to the ALB. (Required)
+* `backend_port` - Port on which the backing instances serve traffic. (Optional; default: 80)
+* `backend_protocol` - Protocol the backing instances use. (Optional; default: HTTP)
+* `certificate_arn` - . (Required if using HTTPS in `alb_protocols`)
+* `cookie_duration` - If sticky sessions via cookies are desired, set this variable to a value from 2 - 604800 seconds. (Optional)
+* `health_check_path` - Path for the load balancer to health check instances. (Optional; default: /)
+* `log_bucket` - S3 bucket where access logs should land. (Required)
+* `log_prefix` - S3 prefix within the `log_bucket` where logs should land. (Optional)
+* `subnets` - ALB will be created in the subnets in this list. (Required)
+* `vpc_id` - Resources will be created in the VPC with this `id`. (Required)
 
 ## Outputs
 -------
-- `alb_id`
+* `alb_id` - `id` of the ALB created.
+* `alb_dns_name` - DNS CNAME of the ALB created.
+* `alb_zone_id` - Route53 `zone_id` of the newly minted ALB.
+* `target_group_arn` - `arn` of the target group. Useful for passing to your Auto Scaling group module.
 
 ## Usage example:
 A full example set is contained in the [example directory](example/). Here's the gist:
 1. Set the input variables from above in [variables.tf](example/variables.tf).
 2. Define the ALB module using the following in your [main.tf](example/main.tf):
 ```
-module "my_web_alb" {
-  source = "github.com/brandoconnor/tf_aws_alb"
-  alb_name = "${var.alb_name}"
-  subnet_azs = "${var.subnet_azs}"
-  backend_port = "${var.backend_port}"
-  backend_protocol = "${var.backend_protocol}"
-  ssl_certificate_id = "${var.ssl_certificate_id}"
-  health_check_target = "${var.health_check_target}"
-  aws_access_key = "${var.aws_access_key}"
-  aws_secret_key = "${var.aws_secret_key}"
-  aws_region = "${var.aws_region}"
+module "alb" {
+  source              = "github.com/brandoconnor/tf_aws_alb"
+  alb_security_groups = "${var.security_group_id_list}"
+  log_bucket          = "${var.log_bucket}"
+  subnets             = "${var.subnet_id_list}"
+  vpc_id              = "${var.vpc_id}"
 }
 ```
 3. Always `terraform plan` to see your change before running `terraform apply`.
