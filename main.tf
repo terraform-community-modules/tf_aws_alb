@@ -1,89 +1,56 @@
-### Configure the provider
-
-provider "aws" {
-  access_key = "${var.aws_access_key}"
-  secret_key = "${var.aws_secret_key}"
-  region     = "${var.aws_region}"
-}
-
 ### ALB resources
 
-resource "aws_alb_target_group" "test" {
-  name     = "tf-example-ecs-ghost"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = "${aws_vpc.main.id}"
-}
+# TODO:
+# need health check
+# internal or external
+# with logging or without logging (perhaps even submodule locally?)
 
 resource "aws_alb" "main" {
-  name            = "tf-example-alb-ecs"
-  subnets         = ["${aws_subnet.main.*.id}"]
-  security_groups = ["${aws_security_group.lb_sg.id}"]
+  name            = "${var.alb_name}"
+  subnets         = ["${split(",", var.subnets)}"]
+  security_groups = ["${split(",", var.alb_security_groups)}"]
+
+  /*
+      access_logs {
+        bucket        = "${var.log_bucket}"
+        prefix = "${var.log_prefix}"
+      }*/
+  count = 1
 }
 
-resource "aws_alb_listener" "front_end" {
+resource "aws_alb_target_group" "target_group" {
+  name     = "${var.alb_name}-tg"
+  port     = "${var.backend_port}"
+  protocol = "${upper(var.backend_protocol)}"
+  vpc_id   = "${var.vpc_id}"
+}
+
+# add listeners using count based on http/https vars
+resource "aws_alb_listener" "front_end_http" {
   load_balancer_arn = "${aws_alb.main.id}"
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.test.id}"
+    target_group_arn = "${aws_alb_target_group.target_group.id}"
     type             = "forward"
   }
 }
 
-### Security
+resource "aws_alb_listener" "front_end_https" {
+  load_balancer_arn = "${aws_alb.main.id}"
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = "${var.certificate_arn}"
+  ssl_policy        = "ELBSecurityPolicy-2015-05"
 
-resource "aws_security_group" "lb_sg" {
-  description = "controls access to the application ELB"
-
-  vpc_id = "${aws_vpc.main.id}"
-  name   = "tf-ecs-lbsg"
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-
-    cidr_blocks = [
-      "0.0.0.0/0",
-    ]
-  }
-}
-
-resource "aws_security_group" "instance_sg" {
-  description = "Controls direct access to application instances."
-  vpc_id      = "${aws_vpc.main.id}"
-  name        = "${var.alb_name}-sg"
-
-  ingress {
-    protocol  = "tcp"
-    from_port = "${var.backend_port}"
-    to_port   = "${var.backend_port}"
-
-    security_groups = [
-      "${aws_security_group.alb_sg.id}",
-    ]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  default_action {
+    target_group_arn = "${aws_alb_target_group.target_group.id}"
+    type             = "forward"
   }
 }
 
 /*
-### ELB
-
 resource "aws_elb" "elb" {
   name            = "${var.elb_name}"
   subnets         = ["${split(",", var.subnet_azs)}"]
@@ -94,21 +61,6 @@ resource "aws_elb" "elb" {
     bucket        = "${var.log_bucket}"
     bucket_prefix = "${var.log_prefix}"
     interval      = 5
-  }
-
-  listener {
-    instance_port      = "${var.backend_port}"
-    instance_protocol  = "${var.backend_protocol}"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = "${var.ssl_certificate_id}"
-  }
-
-  listener {
-    instance_port     = "${var.backend_port}"
-    instance_protocol = "${var.backend_protocol}"
-    lb_port           = 80
-    lb_protocol       = "http"
   }
 
   health_check {
@@ -147,3 +99,4 @@ resource "aws_lb_cookie_stickiness_policy" "https_stickiness" {
   depends_on               = ["aws_elb.elb"]
 }
 */
+

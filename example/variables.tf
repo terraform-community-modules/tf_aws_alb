@@ -14,7 +14,7 @@ variable "alb_security_groups" {
   default = ["sg-edcd9784", "sg-edcd9785"]
 }
 
-variable "ssl_certificate_id" {
+variable "certificate_arn" {
   default = "arn:aws:iam::123456789012:server-certificate/ProdServerCert"
 }
 

@@ -1,12 +1,4 @@
 /*
-Provider variables
-*/
-variable "aws_access_key" {}
-
-variable "aws_secret_key" {}
-variable "aws_region" {}
-
-/*
 Module variables
 */
 
@@ -18,7 +10,7 @@ variable "alb_security_groups" {
   description = "A comma separated string of security groups with which we associate the ALB. e.g. 'sg-edcd9784,sg-edcd9785'"
 }
 
-variable "ssl_certificate_id" {
+variable "certificate_arn" {
   description = "The ARN of the SSL Certificate. e.g. 'arn:aws:iam::123456789012:server-certificate/ProdServerCert'"
 }
 
@@ -38,6 +30,10 @@ variable "health_check_target" {
   description = "The URL the ELB should use for health checks. e.g. HTTPS:443/health"
 }
 
+variable "vpc_id" {
+  description = ""
+}
+
 variable "log_bucket" {
   default = ""
 }
@@ -52,3 +48,4 @@ variable "alb_is_internal" {
   default = false
 }
 */
+

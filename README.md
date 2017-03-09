@@ -34,9 +34,9 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 - `alb_id`
 
 ## Usage example:
-A full example set is contained in the [examples directory](examples/). Here's the gist:
-1. Set the input variables from above in [variables.tf](examples/variables.tf).
-2. Define the ALB module using the following in your [main.tf](examples/main.tf):
+A full example set is contained in the [example directory](example/). Here's the gist:
+1. Set the input variables from above in [variables.tf](example/variables.tf).
+2. Define the ALB module using the following in your [main.tf](example/main.tf):
 ```
 module "my_web_alb" {
   source = "github.com/brandoconnor/tf_aws_alb"
@@ -73,4 +73,4 @@ The [Change log](CHANGELOG.md) captures all important release notes.
 Created and maintained by [Brandon O'Connor](https://github.com/brandoconnor) - brandoconnor@gmail.com.
 
 ## License
-MIT Licensed. See [LICENSE](LICENSE.md) for full details.
+MIT Licensed. See [LICENSE](LICENSE) for full details.
