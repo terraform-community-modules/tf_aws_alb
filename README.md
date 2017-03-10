@@ -1,10 +1,8 @@
 # tf_aws_alb
-
 A Terraform module containing common configurations for an AWS Application Load
 Balancer (ALB) running over HTTP/HTTPS.
 
 ## Assumptions
-
 * *You want to associate the ASG with a target group and ALB*
 * You've created a Virtual Private Cloud (VPC) + subnets where you intend to put
 this ALB and backing instances.
@@ -26,7 +24,6 @@ documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalanc
 For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/hashicorp/terraform/tree/master/examples/aws-ecs-alb).
 
 ## Input Variables
----------------
 * `alb_is_internal` - Determines if the ALB is externally facing or internal. (Optional; default: false)
 * `alb_name` - Name of the ALB as it appears in the AWS console. (Optional; default: my_alb)
 * `alb_protocols` - A comma delimited list of protocols the ALB will accept for incoming connections. Only HTTP and HTTPS are supported. (Optional; default: HTTPS)
@@ -42,7 +39,6 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 * `vpc_id` - Resources will be created in the VPC with this `id`. (Required)
 
 ## Outputs
--------
 * `alb_id` - `id` of the ALB created.
 * `alb_dns_name` - DNS CNAME of the ALB created.
 * `alb_zone_id` - Route53 `zone_id` of the newly minted ALB.
