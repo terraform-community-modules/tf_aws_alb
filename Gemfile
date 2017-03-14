@@ -1,3 +1,7 @@
+ruby '2.4.0'
+
 source 'https://rubygems.org/' do
-  gem 'kitchen-terraform', '~> 0.6'
+  gem 'test-kitchen'
+  gem 'kitchen-terraform'
+  gem 'awspec'
 end

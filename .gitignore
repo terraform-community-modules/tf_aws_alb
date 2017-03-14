@@ -1,6 +1,7 @@
-*.tfvars*
+*.tfvars
 *.tfstate*
 .terraform
-**/Gemfile.lock
 **/inspec.lock
 *.gem
+.kitchen/
+.kitchen.local.yml

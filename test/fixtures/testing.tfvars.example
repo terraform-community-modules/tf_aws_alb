@@ -1,0 +1,8 @@
+alb_security_groups = "sg-edcd9782"
+certificate_arn = "arn:aws:iam::1234567890ab:server-certificate/my-site"
+log_bucket = "log-bucket-us-west-2"
+log_prefix = "my-alb-logs"
+subnets = "sg-edcd9784,sg-edcd9785"
+vpc_id = "vpc-edcd9783"
+aws_region = "us-west-2"
+aws_account_id = "1234567890ab"

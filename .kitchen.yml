@@ -1,0 +1,24 @@
+---
+driver:
+  name: terraform
+
+provisioner:
+  name: terraform
+  directory: test/fixtures
+
+  variable_files:
+    - test/fixtures/testing.tfvars
+
+platforms:
+  - name: aws
+
+verifier:
+  name: terraform
+  format: doc
+  groups:
+  - name: local
+    controls:
+      - local_security_group
+
+suites:
+  - name: default
