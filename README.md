@@ -25,7 +25,7 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 
 ## Input Variables
 * `alb_is_internal` - Determines if the ALB is externally facing or internal. (Optional; default: false)
-* `alb_name` - Name of the ALB as it appears in the AWS console. (Optional; default: my_alb)
+* `alb_name` - Name of the ALB as it appears in the AWS console. (Optional; default: my-alb)
 * `alb_protocols` - A comma delimited list of protocols the ALB will accept for incoming connections. Only HTTP and HTTPS are supported. (Optional; default: HTTPS)
 * `alb_security_groups` - A comma delimited list of security groups to attach to the ALB. (Required)
 * `backend_port` - Port on which the backing instances serve traffic. (Optional; default: 80)
@@ -43,14 +43,15 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 * `alb_dns_name` - DNS CNAME of the ALB created.
 * `alb_zone_id` - Route53 `zone_id` of the newly minted ALB.
 * `target_group_arn` - `arn` of the target group. Useful for passing to your Auto Scaling group module.
+* `root_principle_id` - the id of the AWS root user within this region. See [docs here]('http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-access-logs.html#attach-bucket-policy').
 
 ## Usage example:
-A full example set is contained in the [example directory](example/). Here's the gist:
+A full example set is contained in the [test/fixtures directory](test/fixtures). Here's the gist:
 1. Set the input variables from above in [variables.tf](test/fixtures/variables.tf).
 2. Define the ALB module using the following in your [main.tf](test/fixtures/main.tf):
 ```
 module "alb" {
-  source              = "github.com/brandoconnor/tf_aws_alb//alb"
+  source              = "github.com/terraform-community-modules/tf_aws_alb/alb"
   alb_security_groups = "${module.sg_https_web.security_group_id_web}"
   aws_account_id      = "${var.aws_account_id}"
   certificate_arn     = "${var.certificate_arn}"
@@ -64,7 +65,7 @@ module "alb" {
 4. Win the day!
 
 ## Testing
-This module has been packaged with awsspec tests through test kitchen. To run them:
+This module has been packaged with [awspec]('https://github.com/k1LoW/awspec') tests through test kitchen. To run them:
 1. Install the prerequisites of rvm and ruby 2.4.0 via homebrew.
 2. Install bundler and the gems from our Gemfile:
 ```
@@ -74,7 +75,7 @@ gem install bundler; bundle install
 4. Test using `kitchen test` from the root of the repo.
 
 ## Contributing
-Report issues/questions/feature requests on in the [Issues](https://github.com/brandoconnor/tf_aws_alb/issues) section.
+Report issues/questions/feature requests on in the [Issues](https://github.com/terraform-community-modules/tf_aws_alb/issues) section.
 
 Pull requests are welcome! Ideally create a feature branch and issue for every
 individual change you make. These are the steps:
