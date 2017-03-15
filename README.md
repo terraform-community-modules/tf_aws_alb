@@ -46,19 +46,32 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 
 ## Usage example:
 A full example set is contained in the [example directory](example/). Here's the gist:
-1. Set the input variables from above in [variables.tf](example/variables.tf).
-2. Define the ALB module using the following in your [main.tf](example/main.tf):
+1. Set the input variables from above in [variables.tf](test/fixtures/variables.tf).
+2. Define the ALB module using the following in your [main.tf](test/fixtures/main.tf):
 ```
 module "alb" {
-  source              = "github.com/brandoconnor/tf_aws_alb"
-  alb_security_groups = "${var.security_group_id_list}"
+  source              = "github.com/brandoconnor/tf_aws_alb//alb"
+  alb_security_groups = "${module.sg_https_web.security_group_id_web}"
+  aws_account_id      = "${var.aws_account_id}"
+  certificate_arn     = "${var.certificate_arn}"
   log_bucket          = "${var.log_bucket}"
-  subnets             = "${var.subnet_id_list}"
-  vpc_id              = "${var.vpc_id}"
+  log_prefix          = "${var.log_prefix}"
+  subnets             = "${join(",",module.vpc.public_subnets)}"
+  vpc_id              = "${module.vpc.vpc_id}"
 }
 ```
 3. Always `terraform plan` to see your change before running `terraform apply`.
 4. Win the day!
+
+## Testing
+This module has been packaged with awsspec tests through test kitchen. To run them:
+1. Install the prerequisites of rvm and ruby 2.4.0 via homebrew.
+2. Install bundler and the gems from our Gemfile:
+```
+gem install bundler; bundle install
+```
+3. Configure variables in `test/fixtures/terraform.tfvars`. An example of how this should look is in [terraform.tfvars.example](test/fixtures/terraform.tfvars.example).
+4. Test using `kitchen test` from the root of the repo.
 
 ## Contributing
 Report issues/questions/feature requests on in the [Issues](https://github.com/brandoconnor/tf_aws_alb/issues) section.

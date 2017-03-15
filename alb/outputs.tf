@@ -13,3 +13,7 @@ output "alb_zone_id" {
 output "target_group_arn" {
   value = "${aws_alb_target_group.target_group.arn}"
 }
+
+output "root_principle_id" {
+  value = "${var.principle}"
+}
