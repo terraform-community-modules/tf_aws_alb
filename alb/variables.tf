@@ -2,13 +2,6 @@
 Module variables
 */
 
-# principle map by region found here:
-# http://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html#access-logging-bucket-permissions
-
-variable "aws_account_id" {
-  description = "AWS account ID."
-}
-
 variable "alb_is_internal" {
   description = "Determines if the ALB is internal. Default: false"
   default     = false
@@ -26,11 +19,15 @@ variable "alb_protocols" {
 
 variable "alb_security_groups" {
   description = "A comma separated string of security groups with which we associate the ALB. e.g. 'sg-edcd9784,sg-edcd9785'"
+  type        = "list"
 }
 
 variable "aws_region" {
   description = "AWS region to use."
-  default     = "us-west-2"
+}
+
+variable "aws_account_id" {
+  description = "AWS account ID."
 }
 
 variable "backend_port" {
@@ -65,12 +62,32 @@ variable "log_prefix" {
   description = "S3 prefix within the log_bucket under which logs are stored."
 }
 
-variable "principle" {
-  default = "797873946194"
+variable "principle_account_id" {
+  description = "A map of ELB/ALB root account numbers used to set up logging."
+
+  default = {
+    us-east-1      = "127311923021"
+    us-east-2      = "033677994240"
+    us-west-1      = "027434742980"
+    us-west-2      = "797873946194"
+    ca-central-1   = "985666609251"
+    eu-west-1      = "156460612806"
+    eu-central-1   = "054676820928"
+    eu-west-2      = "652711504416"
+    ap-northeast-1 = "582318560864"
+    ap-northeast-2 = "600734575887"
+    ap-southeast-1 = "114774131450"
+    ap-southeast-2 = "783225319266"
+    ap-south-1     = "718504428378"
+    sa-east-1      = "507241528517"
+    us-gov-west-1  = "048591011584"
+    cn-north-1     = "638102146993"
+  }
 }
 
 variable "subnets" {
-  description = "A comma delimited list of subnets to associate with the ALB. e.g. 'subnet-1a2b3c4d,subnet-1a2b3c4e,subnet-1a2b3c4f'"
+  description = "A list of subnets to associate with the ALB. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
+  type        = "list"
 }
 
 variable "vpc_id" {

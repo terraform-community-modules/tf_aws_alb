@@ -14,6 +14,6 @@ output "target_group_arn" {
   value = "${aws_alb_target_group.target_group.arn}"
 }
 
-output "root_principle_id" {
-  value = "${var.principle}"
+output "principle_account_id" {
+  value = "${lookup(var.principle_account_id, var.aws_region)}"
 }

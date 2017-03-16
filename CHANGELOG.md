@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Tests and fixtures for ALB components using awspec
 * S3 bucket policy for logging
 * Instructions for testing
-* root_principle_id is needed for defining the s3 bucket policy
+* principle_account_id is needed for defining the s3 bucket policy
 
 ### Changed
 * Moved core module into the alb directory. This means any former modules pointing directly at the previous version in github will be broken if not versioned to the 0.1.0 tag.

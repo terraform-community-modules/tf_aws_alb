@@ -28,6 +28,8 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 * `alb_name` - Name of the ALB as it appears in the AWS console. (Optional; default: my-alb)
 * `alb_protocols` - A comma delimited list of protocols the ALB will accept for incoming connections. Only HTTP and HTTPS are supported. (Optional; default: HTTPS)
 * `alb_security_groups` - A comma delimited list of security groups to attach to the ALB. (Required)
+* `aws_region` - Region to deploy our resources. (Required)
+* `aws_account_id` - The AWS account ID. (Required)
 * `backend_port` - Port on which the backing instances serve traffic. (Optional; default: 80)
 * `backend_protocol` - Protocol the backing instances use. (Optional; default: HTTP)
 * `certificate_arn` - . (Required if using HTTPS in `alb_protocols`)
@@ -35,6 +37,7 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 * `health_check_path` - Path for the load balancer to health check instances. (Optional; default: /)
 * `log_bucket` - S3 bucket where access logs should land. (Required)
 * `log_prefix` - S3 prefix within the `log_bucket` where logs should land. (Optional)
+* `principle_account_id` - A mapping of regions to principle account IDs used to send LB logs. (Should only change as regions are added)
 * `subnets` - ALB will be created in the subnets in this list. (Required)
 * `vpc_id` - Resources will be created in the VPC with this `id`. (Required)
 
@@ -43,22 +46,22 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 * `alb_dns_name` - DNS CNAME of the ALB created.
 * `alb_zone_id` - Route53 `zone_id` of the newly minted ALB.
 * `target_group_arn` - `arn` of the target group. Useful for passing to your Auto Scaling group module.
-* `root_principle_id` - the id of the AWS root user within this region. See [docs here]('http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-access-logs.html#attach-bucket-policy').
+* `principle_account_id` - the id of the AWS root user within this region. See [docs here]('http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-access-logs.html#attach-bucket-policy').
 
 ## Usage example:
-A full example set is contained in the [test/fixtures directory](test/fixtures). Here's the gist:
+A full example leveraging other community modules is contained in the [test/fixtures directory](test/fixtures). Here's the gist if you're using this module without:
 1. Set the input variables from above in [variables.tf](test/fixtures/variables.tf).
 2. Define the ALB module using the following in your [main.tf](test/fixtures/main.tf):
 ```
 module "alb" {
-  source              = "github.com/terraform-community-modules/tf_aws_alb/alb"
-  alb_security_groups = "${module.sg_https_web.security_group_id_web}"
+  source              = "github.com/terraform-community-modules/tf_aws_alb//alb"
+  alb_security_groups = "${var.alb_security_groups}"
   aws_account_id      = "${var.aws_account_id}"
   certificate_arn     = "${var.certificate_arn}"
   log_bucket          = "${var.log_bucket}"
   log_prefix          = "${var.log_prefix}"
-  subnets             = "${join(",",module.vpc.public_subnets)}"
-  vpc_id              = "${module.vpc.vpc_id}"
+  subnets             = "${var.public_subnets}"
+  vpc_id              = "${var.vpc_id}"
 }
 ```
 3. Always `terraform plan` to see your change before running `terraform apply`.

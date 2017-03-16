@@ -11,7 +11,7 @@
       "Resource": "arn:aws:s3:::${log_bucket}/${log_prefix}/AWSLogs/${account_id}/*",
       "Principal": {
         "AWS": [
-          "${principle}"
+          "${principle_account_id}"
         ]
       }
     }

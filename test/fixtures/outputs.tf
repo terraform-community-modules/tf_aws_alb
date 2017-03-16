@@ -10,8 +10,8 @@ output "alb_zone_id" {
   value = "${module.alb.alb_zone_id}"
 }
 
-output "root_principle_id" {
-  value = "${module.alb.root_principle_id}"
+output "principle_account_id" {
+  value = "${module.alb.principle_account_id}"
 }
 
 output "vpc_id" {

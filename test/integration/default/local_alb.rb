@@ -6,7 +6,7 @@ log_bucket = terraform_tfvars_config.params['log_bucket']
 log_prefix = terraform_tfvars_config.params['log_prefix']
 aws_account_id = terraform_tfvars_config.params['aws_account_id']
 tf_state = JSON.parse(File.open('.kitchen/kitchen-terraform/default-aws/terraform.tfstate').read)
-principle = tf_state['modules'][0]['outputs']['root_principle_id']['value']
+principle_account_id = tf_state['modules'][0]['outputs']['principle_account_id']['value']
 vpc_id = tf_state['modules'][0]['outputs']['vpc_id']['value']
 
 describe alb('my-alb') do
@@ -30,7 +30,7 @@ describe s3_bucket(log_bucket) do
             "Sid": "Stmt1429136633762",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::#{principle}:root"
+                "AWS": "arn:aws:iam::#{principle_account_id}:root"
             },
             "Action": "s3:PutObject",
             "Resource": "arn:aws:s3:::#{log_bucket}/#{log_prefix}/AWSLogs/#{aws_account_id}/*"

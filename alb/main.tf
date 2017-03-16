@@ -7,29 +7,17 @@ data "template_file" "bucket_policy" {
   template = "${file("${path.module}/bucket_policy.json")}"
 
   vars {
-    log_bucket = "${var.log_bucket}"
-    log_prefix = "${var.log_prefix}"
-    account_id = "${var.aws_account_id}"
-    principle  = "${var.principle}"
+    log_bucket           = "${var.log_bucket}"
+    log_prefix           = "${var.log_prefix}"
+    account_id           = "${var.aws_account_id}"
+    principle_account_id = "${lookup(var.principle_account_id, var.aws_region)}"
   }
 }
 
-/*
-# will return to this approach later
-module "alb" {
-  source              = "./sub_alb"
-  alb_name            = "${var.alb_name}"
-  alb_security_groups = "${var.alb_security_groups}"
-  log_bucket          = "${var.log_bucket}"
-  log_prefix          = "${var.log_prefix}"
-  subnets             = "${var.subnets}"
-}
-*/
-
 resource "aws_alb" "main" {
   name            = "${var.alb_name}"
-  subnets         = ["${split(",", var.subnets)}"]
-  security_groups = ["${split(",", var.alb_security_groups)}"]
+  subnets         = ["${var.subnets}"]
+  security_groups = ["${var.alb_security_groups}"]
   internal        = "${var.alb_is_internal}"
 
   access_logs {
@@ -65,10 +53,6 @@ resource "aws_s3_bucket_policy" "log_bucket_policy" {
   bucket = "${var.log_bucket}"
   policy = "${data.template_file.bucket_policy.rendered}"
 }
-
-/*
-aws_alb.main becomes module.alb in submodulelandia
-*/
 
 resource "aws_alb_listener" "front_end_http" {
   load_balancer_arn = "${aws_alb.main.arn}"

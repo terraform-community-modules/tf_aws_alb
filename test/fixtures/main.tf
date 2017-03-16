@@ -20,11 +20,12 @@ module "sg_https_web" {
 
 module "alb" {
   source              = "../../alb/"
-  alb_security_groups = "${module.sg_https_web.security_group_id_web}"
+  alb_security_groups = ["${module.sg_https_web.security_group_id_web}"]
   aws_account_id      = "${var.aws_account_id}"
+  aws_region          = "${var.aws_region}"
   certificate_arn     = "${var.certificate_arn}"
   log_bucket          = "${var.log_bucket}"
   log_prefix          = "${var.log_prefix}"
-  subnets             = "${join(",",module.vpc.public_subnets)}"
+  subnets             = "${module.vpc.public_subnets}"
   vpc_id              = "${module.vpc.vpc_id}"
 }
