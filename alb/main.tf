@@ -27,8 +27,8 @@ resource "aws_alb" "main" {
 }
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "${var.log_bucket}"
-  policy = "${data.template_file.bucket_policy.rendered}"
+  bucket        = "${var.log_bucket}"
+  policy        = "${data.template_file.bucket_policy.rendered}"
   force_destroy = true
 }
 
