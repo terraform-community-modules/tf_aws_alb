@@ -1,24 +1,19 @@
-# this approach is not working just yet
-output "arn" {
-  value = "${coalesce(aws_alb.alb_loging.arn, aws_alb.alb_nologing.arn) }"
-
-  /*value = "${aws_alb.alb_loging.arn}"*/
+output "alb_id" {
+  value = "${aws_alb.main.id}"
 }
 
-output "dns_name" {
-  value = "${aws_alb.alb_loging.dns_name}"
-
-  /*value = "${coalesce(list("aws_alb.alb_loging.dns_name", "aws_alb.alb_nologing.dns_name")) }"*/
+output "alb_dns_name" {
+  value = "${aws_alb.main.dns_name}"
 }
 
-output "id" {
-  value = "${aws_alb.alb_loging.id}"
-
-  /*value = "${coalesce(list("aws_alb.alb_loging.dns_name", "aws_alb.alb_nologing.dns_name")) }"*/
+output "alb_zone_id" {
+  value = "${aws_alb.main.zone_id}"
 }
 
-output "zone_id" {
-  value = "${aws_alb.alb_loging.zone_id}"
+output "target_group_arn" {
+  value = "${aws_alb_target_group.target_group.arn}"
+}
 
-  /*value = "${coalesce(list("aws_alb.alb_loging.dns_name", "aws_alb.alb_nologing.dns_name")) }"*/
+output "principle_account_id" {
+  value = "${lookup(var.principle_account_id, var.aws_region)}"
 }

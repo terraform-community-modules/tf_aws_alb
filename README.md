@@ -25,9 +25,11 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 
 ## Input Variables
 * `alb_is_internal` - Determines if the ALB is externally facing or internal. (Optional; default: false)
-* `alb_name` - Name of the ALB as it appears in the AWS console. (Optional; default: my_alb)
+* `alb_name` - Name of the ALB as it appears in the AWS console. (Optional; default: my-alb)
 * `alb_protocols` - A comma delimited list of protocols the ALB will accept for incoming connections. Only HTTP and HTTPS are supported. (Optional; default: HTTPS)
 * `alb_security_groups` - A comma delimited list of security groups to attach to the ALB. (Required)
+* `aws_region` - Region to deploy our resources. (Required)
+* `aws_account_id` - The AWS account ID. (Required)
 * `backend_port` - Port on which the backing instances serve traffic. (Optional; default: 80)
 * `backend_protocol` - Protocol the backing instances use. (Optional; default: HTTP)
 * `certificate_arn` - . (Required if using HTTPS in `alb_protocols`)
@@ -35,6 +37,7 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 * `health_check_path` - Path for the load balancer to health check instances. (Optional; default: /)
 * `log_bucket` - S3 bucket where access logs should land. (Required)
 * `log_prefix` - S3 prefix within the `log_bucket` where logs should land. (Optional)
+* `principle_account_id` - A mapping of regions to principle account IDs used to send LB logs. (Should only change as regions are added)
 * `subnets` - ALB will be created in the subnets in this list. (Required)
 * `vpc_id` - Resources will be created in the VPC with this `id`. (Required)
 
@@ -43,25 +46,39 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 * `alb_dns_name` - DNS CNAME of the ALB created.
 * `alb_zone_id` - Route53 `zone_id` of the newly minted ALB.
 * `target_group_arn` - `arn` of the target group. Useful for passing to your Auto Scaling group module.
+* `principle_account_id` - the id of the AWS root user within this region. See [docs here]('http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-access-logs.html#attach-bucket-policy').
 
 ## Usage example:
-A full example set is contained in the [example directory](example/). Here's the gist:
-1. Set the input variables from above in [variables.tf](example/variables.tf).
-2. Define the ALB module using the following in your [main.tf](example/main.tf):
+A full example leveraging other community modules is contained in the [test/fixtures directory](test/fixtures). Here's the gist if you're using this module without:
+1. Set the input variables from above in [variables.tf](test/fixtures/variables.tf).
+2. Define the ALB module using the following in your [main.tf](test/fixtures/main.tf):
 ```
 module "alb" {
-  source              = "github.com/brandoconnor/tf_aws_alb"
-  alb_security_groups = "${var.security_group_id_list}"
+  source              = "github.com/terraform-community-modules/tf_aws_alb//alb"
+  alb_security_groups = "${var.alb_security_groups}"
+  aws_account_id      = "${var.aws_account_id}"
+  certificate_arn     = "${var.certificate_arn}"
   log_bucket          = "${var.log_bucket}"
-  subnets             = "${var.subnet_id_list}"
+  log_prefix          = "${var.log_prefix}"
+  subnets             = "${var.public_subnets}"
   vpc_id              = "${var.vpc_id}"
 }
 ```
 3. Always `terraform plan` to see your change before running `terraform apply`.
 4. Win the day!
 
+## Testing
+This module has been packaged with [awspec]('https://github.com/k1LoW/awspec') tests through test kitchen. To run them:
+1. Install the prerequisites of rvm and ruby 2.4.0 via homebrew.
+2. Install bundler and the gems from our Gemfile:
+```
+gem install bundler; bundle install
+```
+3. Configure variables in `test/fixtures/terraform.tfvars`. An example of how this should look is in [terraform.tfvars.example](test/fixtures/terraform.tfvars.example).
+4. Test using `kitchen test` from the root of the repo.
+
 ## Contributing
-Report issues/questions/feature requests on in the [Issues](https://github.com/brandoconnor/tf_aws_alb/issues) section.
+Report issues/questions/feature requests on in the [Issues](https://github.com/terraform-community-modules/tf_aws_alb/issues) section.
 
 Pull requests are welcome! Ideally create a feature branch and issue for every
 individual change you make. These are the steps:

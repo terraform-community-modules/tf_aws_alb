@@ -1,0 +1,28 @@
+---
+driver:
+  name: terraform
+
+provisioner:
+  name: terraform
+  directory: test/fixtures
+  variable_files:
+    - test/fixtures/terraform.tfvars
+
+platforms:
+  - name: aws
+
+verifier:
+  name: awspec
+  # - name: terraform
+  #   format: doc
+  #   groups:
+  #   - name: local_tests
+  #     controls:
+  #     - local_alb
+
+suites:
+  - name: default
+    verifier:
+      name: awspec
+      patterns:
+      - test/integration/default/local_alb.rb
