@@ -20,6 +20,7 @@ end
 
 describe s3_bucket(log_bucket) do
   it { should exist }
+  it { should have_object("#{log_prefix}/AWSLogs/#{aws_account_id}/ELBAccessLogTestFile") }
     it do
     should have_policy <<-POLICY
 {
