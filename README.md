@@ -40,6 +40,7 @@ For an example of using ALB with ECS look no further than the [hashicorp example
 * `principle_account_id` - A mapping of regions to principle account IDs used to send LB logs. (Should only change as regions are added)
 * `subnets` - ALB will be created in the subnets in this list. (Required)
 * `vpc_id` - Resources will be created in the VPC with this `id`. (Required)
+* `tags` - A mapping of tags to assign to the resource.
 
 ## Outputs
 * `alb_id` - `id` of the ALB created.
@@ -62,6 +63,11 @@ module "alb" {
   log_prefix          = "${var.log_prefix}"
   subnets             = "${var.public_subnets}"
   vpc_id              = "${var.vpc_id}"
+
+  tags {
+      "Terraform" = "true"
+      "Env" = "${terraform.env}"
+  }
 }
 ```
 3. Always `terraform plan` to see your change before running `terraform apply`.

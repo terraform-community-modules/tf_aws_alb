@@ -24,12 +24,16 @@ resource "aws_alb" "main" {
     bucket = "${var.log_bucket}"
     prefix = "${var.log_prefix}"
   }
+
+  tags = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
 }
 
 resource "aws_s3_bucket" "log_bucket" {
   bucket        = "${var.log_bucket}"
   policy        = "${data.template_file.bucket_policy.rendered}"
   force_destroy = true
+
+  tags = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"
 }
 
 resource "aws_alb_target_group" "target_group" {
@@ -53,6 +57,8 @@ resource "aws_alb_target_group" "target_group" {
     cookie_duration = "${var.cookie_duration}"
     enabled         = "${ var.cookie_duration == 1 ? false : true}"
   }
+
+  tags = "${merge(var.tags, map("Name", format("%s-tg", var.alb_name)))}"
 }
 
 resource "aws_alb_listener" "front_end_http" {
