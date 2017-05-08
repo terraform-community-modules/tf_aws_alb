@@ -12,6 +12,11 @@ variable "alb_name" {
   default     = "my-alb"
 }
 
+variable "alb_target_group_name" {
+  description = "Target group name"
+  default     = "my-alb-tg"
+}
+
 variable "alb_protocols" {
   description = "A comma delimited list of the protocols the ALB accepts. e.g.: HTTPS"
   default     = "HTTPS"

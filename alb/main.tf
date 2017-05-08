@@ -28,16 +28,16 @@ resource "aws_alb" "main" {
   tags = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
 }
 
-resource "aws_s3_bucket" "log_bucket" {
-  bucket        = "${var.log_bucket}"
-  policy        = "${data.template_file.bucket_policy.rendered}"
-  force_destroy = true
-
-  tags = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"
-}
+#resource "aws_s3_bucket" "log_bucket" {
+#  bucket        = "${var.log_bucket}"
+#  policy        = "${data.template_file.bucket_policy.rendered}"
+#  force_destroy = true
+#
+#  tags = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"
+#}
 
 resource "aws_alb_target_group" "target_group" {
-  name     = "${var.alb_name}-tg"
+  name     = "${var.alb_target_group_name}"
   port     = "${var.backend_port}"
   protocol = "${upper(var.backend_protocol)}"
   vpc_id   = "${var.vpc_id}"
@@ -58,7 +58,7 @@ resource "aws_alb_target_group" "target_group" {
     enabled         = "${ var.cookie_duration == 1 ? false : true}"
   }
 
-  tags = "${merge(var.tags, map("Name", format("%s-tg", var.alb_name)))}"
+  tags = "${merge(var.tags, map("Name", format("%s", var.alb_target_group_name)))}"
 }
 
 resource "aws_alb_listener" "front_end_http" {
