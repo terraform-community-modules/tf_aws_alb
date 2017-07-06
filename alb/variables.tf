@@ -90,6 +90,10 @@ variable "principle_account_id" {
   }
 }
 
+variable "ssl_policy" {
+  default = "ELBSecurityPolicy-2015-05"
+}
+
 variable "subnets" {
   description = "A list of subnets to associate with the ALB. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
   type        = "list"
