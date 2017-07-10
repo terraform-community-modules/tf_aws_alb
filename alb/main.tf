@@ -19,6 +19,7 @@ resource "aws_alb" "main" {
   subnets         = ["${var.subnets}"]
   security_groups = ["${var.alb_security_groups}"]
   internal        = "${var.alb_is_internal}"
+  idle_timeout    = "${var.alb_idle_timeout}"
 
   access_logs {
     bucket = "${var.log_bucket}"

@@ -27,6 +27,11 @@ variable "alb_security_groups" {
   type        = "list"
 }
 
+variable "alb_idle_timeout" {
+  description = "Idle timeout for ALB"
+  default     = 60
+}
+
 variable "aws_region" {
   description = "AWS region to use."
 }
