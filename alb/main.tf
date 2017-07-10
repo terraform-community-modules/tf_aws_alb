@@ -19,6 +19,7 @@ resource "aws_alb" "main" {
   subnets         = ["${var.subnets}"]
   security_groups = ["${var.alb_security_groups}"]
   internal        = "${var.alb_is_internal}"
+  idle_timeout    = "${var.alb_idle_timeout}"
 
   access_logs {
     bucket = "${var.log_bucket}"
@@ -28,16 +29,16 @@ resource "aws_alb" "main" {
   tags = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
 }
 
-resource "aws_s3_bucket" "log_bucket" {
-  bucket        = "${var.log_bucket}"
-  policy        = "${data.template_file.bucket_policy.rendered}"
-  force_destroy = true
-
-  tags = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"
-}
+#resource "aws_s3_bucket" "log_bucket" {
+#  bucket        = "${var.log_bucket}"
+#  policy        = "${data.template_file.bucket_policy.rendered}"
+#  force_destroy = true
+#
+#  tags = "${merge(var.tags, map("Name", format("%s", var.log_bucket)))}"
+#}
 
 resource "aws_alb_target_group" "target_group" {
-  name     = "${var.alb_name}-tg"
+  name     = "${var.alb_target_group_name}"
   port     = "${var.backend_port}"
   protocol = "${upper(var.backend_protocol)}"
   vpc_id   = "${var.vpc_id}"
@@ -58,7 +59,7 @@ resource "aws_alb_target_group" "target_group" {
     enabled         = "${ var.cookie_duration == 1 ? false : true}"
   }
 
-  tags = "${merge(var.tags, map("Name", format("%s-tg", var.alb_name)))}"
+  tags = "${merge(var.tags, map("Name", format("%s", var.alb_target_group_name)))}"
 }
 
 resource "aws_alb_listener" "front_end_http" {
@@ -79,7 +80,7 @@ resource "aws_alb_listener" "front_end_https" {
   port              = "443"
   protocol          = "HTTPS"
   certificate_arn   = "${var.certificate_arn}"
-  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  ssl_policy        = "${var.ssl_policy}"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.target_group.id}"

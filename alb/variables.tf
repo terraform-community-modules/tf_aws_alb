@@ -12,6 +12,11 @@ variable "alb_name" {
   default     = "my-alb"
 }
 
+variable "alb_target_group_name" {
+  description = "Target group name"
+  default     = "my-alb-tg"
+}
+
 variable "alb_protocols" {
   description = "A comma delimited list of the protocols the ALB accepts. e.g.: HTTPS"
   default     = "HTTPS"
@@ -20,6 +25,11 @@ variable "alb_protocols" {
 variable "alb_security_groups" {
   description = "A comma separated string of security groups with which we associate the ALB. e.g. 'sg-edcd9784,sg-edcd9785'"
   type        = "list"
+}
+
+variable "alb_idle_timeout" {
+  description = "Idle timeout for ALB"
+  default     = 60
 }
 
 variable "aws_region" {
@@ -83,6 +93,10 @@ variable "principle_account_id" {
     us-gov-west-1  = "048591011584"
     cn-north-1     = "638102146993"
   }
+}
+
+variable "ssl_policy" {
+  default = "ELBSecurityPolicy-2015-05"
 }
 
 variable "subnets" {
