@@ -21,7 +21,7 @@ It's recommended you use this module with
 Admittedly, the use-case appears almost identical to how one would use an ELB
 BUT we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
 documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/).
-For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/hashicorp/terraform/tree/master/examples/aws-ecs-alb).
+For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
 
 ## Input Variables
 * `alb_is_internal` - Determines if the ALB is externally facing or internal. (Optional; default: false)
@@ -55,7 +55,7 @@ A full example leveraging other community modules is contained in the [test/fixt
 2. Define the ALB module using the following in your [main.tf](test/fixtures/main.tf):
 ```
 module "alb" {
-  source              = "github.com/terraform-community-modules/tf_aws_alb//alb"
+  source              = "github.com/terraform-community-modules/tf_aws_alb/alb"
   alb_security_groups = "${var.alb_security_groups}"
   aws_account_id      = "${var.aws_account_id}"
   certificate_arn     = "${var.certificate_arn}"
