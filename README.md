@@ -21,7 +21,7 @@ It's recommended you use this module with
 Admittedly, the use-case appears almost identical to how one would use an ELB
 BUT we inherit a few bonuses by moving to ALB. Those are best outlined in [AWS's
 documentation](https://aws.amazon.com/elasticloadbalancing/applicationloadbalancer/).
-For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/hashicorp/terraform/tree/master/examples/aws-ecs-alb).
+For an example of using ALB with ECS look no further than the [hashicorp example](https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/ecs-alb).
 
 ## Input Variables
 * `alb_is_internal` - Determines if the ALB is externally facing or internal. (Optional; default: false)
