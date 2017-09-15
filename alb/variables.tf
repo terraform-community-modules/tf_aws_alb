@@ -56,10 +56,12 @@ variable "health_check_path" {
 
 variable "log_bucket" {
   description = "S3 bucket for storing ALB access logs."
+  default     = ""
 }
 
 variable "log_prefix" {
   description = "S3 prefix within the log_bucket under which logs are stored."
+  default     = ""
 }
 
 variable "principle_account_id" {

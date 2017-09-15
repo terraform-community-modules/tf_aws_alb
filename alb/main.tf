@@ -21,14 +21,16 @@ resource "aws_alb" "main" {
   internal        = "${var.alb_is_internal}"
 
   access_logs {
-    bucket = "${var.log_bucket}"
-    prefix = "${var.log_prefix}"
+    bucket  = "${var.log_bucket}"
+    prefix  = "${var.log_prefix}"
+    enabled = "${var.log_bucket != ""}"
   }
 
   tags = "${merge(var.tags, map("Name", format("%s", var.alb_name)))}"
 }
 
 resource "aws_s3_bucket" "log_bucket" {
+  count         = "${var.log_bucket != "" ? 1 : 0}"
   bucket        = "${var.log_bucket}"
   policy        = "${data.template_file.bucket_policy.rendered}"
   force_destroy = true
